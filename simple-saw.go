@@ -2,12 +2,13 @@ package ugens
 
 import "github.com/CameronGorrie/sc"
 
-func SimpleSine(p sc.Params) sc.Ugen {
+func SimpleSaw(p sc.Params) sc.Ugen {
 	var (
-		bus  = p.Add("bus", 0)
-		freq = p.Add("freq", 440)
-		gate = p.Add("gate", 1)
-		bend = p.Add("bend", 1)
+		bus   = p.Add("bus", 0)
+		freq  = p.Add("freq", 440)
+		gate  = p.Add("gate", 1)
+		phase = p.Add("phase", 0)
+		width = p.Add("width", 0.05)
 	)
 
 	env := sc.EnvGen{
@@ -21,8 +22,10 @@ func SimpleSine(p sc.Params) sc.Ugen {
 		},
 	}.Rate(sc.KR)
 
-	sig := sc.SinOsc{
-		Freq: freq.Mul(bend),
+	sig := sc.VarSaw{
+		Freq:   freq,
+		IPhase: phase,
+		Width:  width,
 	}.Rate(sc.AR).Mul(env)
 
 	return sc.Out{

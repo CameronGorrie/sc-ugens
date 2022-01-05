@@ -4,4 +4,5 @@ import "github.com/CameronGorrie/sc"
 
 var CompleteDictionary = map[string]sc.UgenFunc{
 	"simple_sine": SimpleSine,
+	"simple_saw":  SimpleSaw,
 }
