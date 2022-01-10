@@ -9,6 +9,7 @@ func SimpleSaw(p sc.Params) sc.Ugen {
 		gate  = p.Add("gate", 1)
 		phase = p.Add("phase", 0)
 		width = p.Add("width", 0.05)
+		bend  = p.Add("bend", 1)
 	)
 
 	env := sc.EnvGen{
@@ -23,7 +24,7 @@ func SimpleSaw(p sc.Params) sc.Ugen {
 	}.Rate(sc.KR)
 
 	sig := sc.VarSaw{
-		Freq:   freq,
+		Freq:   freq.Mul(bend),
 		IPhase: phase,
 		Width:  width,
 	}.Rate(sc.AR).Mul(env)
