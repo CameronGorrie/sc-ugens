@@ -8,6 +8,7 @@ func SimpleSine(p sc.Params) sc.Ugen {
 		freq = p.Add("freq", 440)
 		gate = p.Add("gate", 1)
 		bend = p.Add("bend", 1)
+		amp  = p.Add("amp", 0.3)
 	)
 
 	env := sc.EnvGen{
@@ -23,7 +24,7 @@ func SimpleSine(p sc.Params) sc.Ugen {
 
 	sig := sc.SinOsc{
 		Freq: freq.Mul(bend),
-	}.Rate(sc.AR).Mul(env)
+	}.Rate(sc.AR).Mul(env).Mul(amp)
 
 	return sc.Out{
 		Bus:      bus,
