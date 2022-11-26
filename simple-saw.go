@@ -1,31 +1,37 @@
 package ugens
 
-import "github.com/CameronGorrie/sc"
+import (
+	"github.com/CameronGorrie/sc"
+)
 
 func SimpleSaw(p sc.Params) sc.Ugen {
 	var (
-		bus   = p.Add("bus", 0)
-		freq  = p.Add("freq", 440)
-		gate  = p.Add("gate", 1)
-		phase = p.Add("phase", 0)
-		width = p.Add("width", 0.05)
-		bend  = p.Add("bend", 1)
+		a     = p.Add("a", 0.01)
 		amp   = p.Add("amp", 0.3)
+		bend  = p.Add("bend", 0)
+		bus   = p.Add("bus", 0)
+		d     = p.Add("d", 1)
+		freq  = p.Add("freq", 440)
+		gate  = p.Add("gate", 0)
+		phase = p.Add("phase", 0)
+		r     = p.Add("r", 0)
+		s     = p.Add("s", 1)
+		width = p.Add("width", 0.05)
 	)
 
 	env := sc.EnvGen{
 		Gate: gate,
 		Done: sc.FreeEnclosing,
 		Env: sc.EnvADSR{
-			A: sc.C(0.01),
-			D: sc.C(1),
-			S: sc.C(1),
-			R: sc.C(1),
+			A: a,
+			D: d,
+			S: s,
+			R: r,
 		},
 	}.Rate(sc.KR)
 
 	sig := sc.VarSaw{
-		Freq:   freq.Mul(bend),
+		Freq:   freq.Mul(bend.Midiratio()),
 		IPhase: phase,
 		Width:  width,
 	}.Rate(sc.AR).Mul(env).Mul(amp)
