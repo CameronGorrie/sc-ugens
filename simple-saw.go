@@ -6,23 +6,27 @@ import (
 
 func SimpleSaw(p sc.Params) sc.Ugen {
 	var (
-		bus   = p.Add("bus", 0)
+		amp   = p.Add("amp", 0.3)
+		atk   = p.Add("atk", 0.01)
+		bend  = p.Add("bend", 0)
+		del   = p.Add("del", 1)
 		freq  = p.Add("freq", 440)
 		gate  = p.Add("gate", 0)
+		out   = p.Add("out", 0)
 		phase = p.Add("phase", 0)
+		rel   = p.Add("rel", 0)
+		sus   = p.Add("sus", 1)
 		width = p.Add("width", 0.05)
-		bend  = p.Add("bend", 0)
-		amp   = p.Add("amp", 0.3)
 	)
 
 	env := sc.EnvGen{
 		Gate: gate,
 		Done: sc.FreeEnclosing,
 		Env: sc.EnvADSR{
-			A: sc.C(0.01),
-			D: sc.C(1),
-			S: sc.C(1),
-			R: sc.C(1),
+			A: atk,
+			D: del,
+			S: sus,
+			R: rel,
 		},
 	}.Rate(sc.KR)
 
@@ -33,7 +37,7 @@ func SimpleSaw(p sc.Params) sc.Ugen {
 	}.Rate(sc.AR).Mul(env).Mul(amp)
 
 	return sc.Out{
-		Bus:      bus,
+		Bus:      out,
 		Channels: sc.Multi(sig, sig),
 	}.Rate(sc.AR)
 }

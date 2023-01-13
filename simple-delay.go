@@ -4,22 +4,26 @@ import "github.com/CameronGorrie/sc"
 
 func SimpleDelay(p sc.Params) sc.Ugen {
 	var (
-		in        = p.Add("in", 0)
-		out       = p.Add("out", 0)
-		amp       = p.Add("amp", 1)
-		delayTime = p.Add("delayTime", 1)
+		amp    = p.Add("amp", 1)
+		dTime  = p.Add("dTime", 0.9)
+		in     = p.Add("in", 0)
+		mdTime = p.Add("mdTime", 1)
+		out    = p.Add("out", 0)
 	)
 
-	sig := sc.In{Bus: in}.Rate(sc.AR).Mul(amp)
-	dSig := sc.Delay{
-		In:            sig,
+	inSig := sc.In{
+		Bus: in,
+	}.Rate(sc.AR).Mul(amp)
+
+	sig := sc.Delay{
+		In:            inSig,
 		Interpolation: sc.InterpolationLinear,
-		MaxDelayTime:  delayTime,
-		DelayTime:     sc.C(0.9),
+		MaxDelayTime:  mdTime,
+		DelayTime:     dTime,
 	}.Rate(sc.AR)
 
 	return sc.Out{
 		Bus:      out,
-		Channels: sc.Multi(dSig, dSig),
+		Channels: sc.Multi(sig, sig),
 	}.Rate(sc.AR)
 }
