@@ -1,4 +1,4 @@
-package ugens
+package mpe
 
 import (
 	"github.com/CameronGorrie/sc"

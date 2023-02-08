@@ -1,4 +1,4 @@
-package ugens
+package simple
 
 import (
 	"github.com/CameronGorrie/sc"

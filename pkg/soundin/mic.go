@@ -1,4 +1,4 @@
-package ugens
+package soundin
 
 import "github.com/CameronGorrie/sc"
 

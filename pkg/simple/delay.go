@@ -1,8 +1,8 @@
-package ugens
+package simple
 
 import "github.com/CameronGorrie/sc"
 
-func SimpleDelay(p sc.Params) sc.Ugen {
+func Delay(p sc.Params) sc.Ugen {
 	var (
 		amp    = p.Add("amp", 1)
 		dTime  = p.Add("dTime", 0.9)
