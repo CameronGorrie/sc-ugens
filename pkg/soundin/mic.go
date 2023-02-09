@@ -4,12 +4,12 @@ import "github.com/CameronGorrie/sc"
 
 func Mic(p sc.Params) sc.Ugen {
 	var (
-		in  = p.Add("in", 0)
 		out = p.Add("out", 0)
 	)
 
 	sig := sc.SoundIn{
-		Bus: in,
+		// SoundIn busses must be constant or an array of constants.
+		Bus: sc.C(0),
 	}.Rate(sc.AR)
 
 	return sc.Out{

@@ -3,6 +3,7 @@ package play
 import (
 	"flag"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 	"sync"
@@ -25,8 +26,9 @@ type App struct {
 // New creates a new app with some options already added:
 //     -l        Lists the synthdefs for the app.
 //     -s SOUND  Plays a sound.
-func NewApp(fs *flag.FlagSet) *App {
+func NewApp(c *sc.Client, fs *flag.FlagSet) *App {
 	app := &App{
+		c: c,
 		m: map[string]*sc.Synthdef{},
 	}
 
@@ -65,13 +67,14 @@ func (app *App) List() {
 
 // Play plays a sound.
 // params should be key-value pairs formatted as "key=value"
-func (app *App) Play(sound string, params []string) error {
+func (app *App) Play(sound string, params []string) int {
 	app.mu.RLock()
 
 	def, exists := app.m[sound]
 	if !exists {
 		app.mu.RUnlock()
-		return errors.Errorf("unrecognized sound: " + sound)
+		fmt.Fprintf(os.Stderr, "unrecognized sound: %s\n", sound)
+		return 1
 	}
 
 	app.mu.RUnlock()
@@ -80,35 +83,35 @@ func (app *App) Play(sound string, params []string) error {
 	for _, param := range params {
 		a := strings.Split(param, "=")
 		if len(a) < 2 {
-			return errors.Errorf("could not parse key=value from " + param)
+			errors.Errorf("could not parse key=value from " + param)
 		}
 
 		fv, err := strconv.ParseFloat(a[1], 32)
 		if err != nil {
-			return errors.Wrap(err, "parsing control value")
+			errors.Wrap(err, "parsing control value")
+			ErrorAndExit("[parse]", err)
 		}
 
 		ctls[a[0]] = float32(fv)
 	}
 
 	if err := app.c.SendDef(def); err != nil {
-		return errors.Errorf("could not send def to server: ", err)
+		ErrorAndExit("could not send def to server", err)
 	}
 
 	if _, err := app.c.Synth(def.Name, app.c.NextSynthID(), sc.AddToTail, sc.DefaultGroupID, ctls); err != nil {
-		return errors.Wrap(err, "playing synthdef")
+		ErrorAndExit("%s playing synthdef\n", err)
 	}
 
-	return nil
+	return 0
 }
 
 // Run runs the app.
 // args should be the non-flag command line arguments.
-func (app *App) Run(args []string) error {
+func (app *App) Run(args []string) int {
 	if app.list {
 		app.List()
-
-		return nil
+		return 0
 	}
 
 	return app.Play(app.sound, args)
