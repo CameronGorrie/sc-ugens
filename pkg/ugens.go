@@ -17,4 +17,5 @@ var Lib = map[string]sc.UgenFunc{
 	"delay":            simple.Delay,
 	"saw":              simple.SimpleSaw,
 	"sine":             simple.SimpleSine,
+	"wobble":           ambient.Wobble,
 }
