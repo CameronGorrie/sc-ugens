@@ -17,5 +17,6 @@ var Lib = map[string]sc.UgenFunc{
 	"polyRhythmicDrone": pads.PolyRhythmicDrone,
 	"saw":               simple.SimpleSaw,
 	"sine":              simple.SimpleSine,
+	"spaceEngine":       ambient.SpaceEngine,
 	"wobble":            ambient.Wobble,
 }
