@@ -12,11 +12,11 @@ import (
 var Lib = map[string]sc.UgenFunc{
 	"buf":               samples.Buf,
 	"delay":             simple.Delay,
-	"detuneDistortion":  ambient.DetuneDistortion,
+	"detune_distortion": ambient.DetuneDistortion,
 	"mic":               soundin.Mic,
-	"polyRhythmicDrone": pads.PolyRhythmicDrone,
+	"pr_drone":          pads.PolyRhythmicDrone,
 	"saw":               simple.SimpleSaw,
 	"sine":              simple.SimpleSine,
-	"spaceEngine":       ambient.SpaceEngine,
+	"space_engine":      ambient.SpaceEngine,
 	"wobble":            ambient.Wobble,
 }
