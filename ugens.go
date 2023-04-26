@@ -2,11 +2,11 @@ package ugens
 
 import (
 	"github.com/CameronGorrie/sc"
-	"github.com/CameronGorrie/ugens/pkg/ambient"
-	"github.com/CameronGorrie/ugens/pkg/pads"
-	"github.com/CameronGorrie/ugens/pkg/samples"
-	"github.com/CameronGorrie/ugens/pkg/simple"
-	"github.com/CameronGorrie/ugens/pkg/soundin"
+	"github.com/CameronGorrie/ugens/ambient"
+	"github.com/CameronGorrie/ugens/pads"
+	"github.com/CameronGorrie/ugens/samples"
+	"github.com/CameronGorrie/ugens/simple"
+	"github.com/CameronGorrie/ugens/soundin"
 )
 
 var Lib = map[string]sc.UgenFunc{

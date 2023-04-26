@@ -4,11 +4,24 @@ import "github.com/CameronGorrie/sc"
 
 func SpaceEngine(p sc.Params) sc.Ugen {
 	var (
-		out = p.Add("out", 0)
+		amp  = p.Add("amp", 0.1)
+		out  = p.Add("out", 0)
+		gate = p.Add("gate", 0)
 	)
 
+	env := sc.EnvGen{
+		Gate: gate,
+		Done: sc.FreeEnclosing,
+		Env: sc.EnvADSR{
+			A: sc.C(0.1),
+			D: sc.C(0.1),
+			S: sc.C(0.5),
+			R: sc.C(0.1),
+		},
+	}.Rate(sc.KR)
+
 	w2 := sc.SinOsc{
-		Freq: sc.C(101),
+		Freq: sc.C(800),
 		Phase: sc.Saw{
 			Freq: sc.C(0.12345),
 		}.Rate(sc.KR).Mul(sc.C(678)).Add(sc.C(9)),
@@ -25,7 +38,7 @@ func SpaceEngine(p sc.Params) sc.Ugen {
 
 	sig := sc.SinOsc{
 		Freq: w1.Mul(sc.C(50)).Add(sc.C(10)),
-	}.Rate(sc.AR).Mul(sc.C(0.5))
+	}.Rate(sc.AR).Mul(amp).Mul(env)
 
 	return sc.Out{
 		Bus:      out,
